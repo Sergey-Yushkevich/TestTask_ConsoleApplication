@@ -7,5 +7,7 @@
         public string? Description { get; set; }
         public string? Category { get; set; }
         public DateTime PubDate { get; set; }
+
+        public Item() { }
     }
 }

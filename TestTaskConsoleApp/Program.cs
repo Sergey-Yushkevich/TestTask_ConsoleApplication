@@ -1,17 +1,18 @@
-﻿using System.Globalization;
-using System.Xml.Serialization;
+﻿using Newtonsoft.Json;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace TestTaskConsoleApp
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-
+            await SerializeToJson(GetItems("data.xml"));
+            await SerializeToExcel(GetItems("data.xml"));
         }
 
-        public static IEnumerable<Item> GetItems(string path)
+        public static IEnumerable<Item>? GetItems(string path)
         {
             XDocument document = XDocument.Load(path);
 
@@ -29,6 +30,20 @@ namespace TestTaskConsoleApp
                 .OrderBy(i => i.PubDate);
 
             return polytic;
+        }
+
+        public static async Task SerializeToJson(IEnumerable<Item>? items)
+        {
+            var json = JsonConvert.SerializeObject(items);
+
+            await File.WriteAllTextAsync("data.json", json);
+        }
+
+        public static async Task SerializeToExcel(IEnumerable<Item>? items)
+        {
+            var book = new ExcelConverter().Fill(items);
+
+            await File.WriteAllBytesAsync("data.xlsx", book);
         }
     }
 }
