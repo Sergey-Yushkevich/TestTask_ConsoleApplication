@@ -9,7 +9,7 @@ namespace TestTaskConsoleApp
 {
     public class ExcelConverter
     {
-        public byte[] Fill(IEnumerable<Item>? items)
+        public static byte[] Fill(IEnumerable<Item>? items)
         {
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
             var package = new ExcelPackage();

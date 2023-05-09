@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Xml.Linq;
 
 namespace TestTaskConsoleApp
@@ -8,8 +7,22 @@ namespace TestTaskConsoleApp
     {
         static async Task Main(string[] args)
         {
-            await SerializeToJson(GetItems("data.xml"));
-            await SerializeToExcel(GetItems("data.xml"));
+            var items = GetItems("data.xml");
+
+            Console.WriteLine("Enter type of format: 1 - json, 2 - excel");
+            var result = Console.Read();
+
+            switch (result)
+            {
+                case 1:
+                    await Serializer.SerializeToJson(items);
+                    break;
+                case 2:
+                    await Serializer.SerializeToExcel(items);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public static IEnumerable<Item>? GetItems(string path)
@@ -32,18 +45,6 @@ namespace TestTaskConsoleApp
             return polytic;
         }
 
-        public static async Task SerializeToJson(IEnumerable<Item>? items)
-        {
-            var json = JsonConvert.SerializeObject(items);
-
-            await File.WriteAllTextAsync("data.json", json);
-        }
-
-        public static async Task SerializeToExcel(IEnumerable<Item>? items)
-        {
-            var book = new ExcelConverter().Fill(items);
-
-            await File.WriteAllBytesAsync("data.xlsx", book);
-        }
+        
     }
 }
